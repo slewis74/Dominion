@@ -1,4 +1,4 @@
-namespace Realm
+namespace Realm.Events
 {
     public interface IHandle<in TEvent> : IHandelDomainEvents
         where TEvent : IDomainEvent

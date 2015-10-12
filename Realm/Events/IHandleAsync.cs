@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Realm
+namespace Realm.Events
 {
     public interface IHandleAsync<in TEvent> : IHandelDomainEvents
         where TEvent : IDomainEvent
