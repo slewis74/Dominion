@@ -98,4 +98,4 @@ Last, but not least, some help with registering the Event Handler types.  Realm 
 		.InstancePerRequest();
 
 ```
-The number of calls will depends on your app, and how many Assemblies you have with handlers that need to be registered.
+The number of calls will depend on your app, and how many Assemblies you have with handlers that need to be registered.
