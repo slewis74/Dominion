@@ -72,7 +72,7 @@ This listens to the ObjectMaterialized event, and if the object is of the generi
 
 ```
 
-**But wait, there's more!!!**  You don't need to write those yourself, Realm.EntityFramework contains not only the DbContextExtensions implementation shown above, ready for you to ignore.  Why ignore it?  Because you don't need to even call it yourself! There a WithEventPublisherOnMaterialized registration extension, so you just need to do the following.    
+**But wait, there's more!!!**  You don't need to write those yourself, Realm.EntityFramework contains not only the DbContextExtensions implementation shown above, it contains a WithEventPublisherOnMaterialized registration extension, so you don't even need to worry about the DbContextExtensions yourself, you just do the following    
 
 ```csharp
     builder.RegisterType<DbContext>()
