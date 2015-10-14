@@ -2,6 +2,6 @@
 {
     public interface IPublishDomainEvents
     {
-        void SetBroker(IEventBroker broker);
+        void SetPublisher(IEventPublisher broker);
     }
 }

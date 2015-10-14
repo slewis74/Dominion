@@ -46,9 +46,13 @@
   <ItemGroup>
     <Compile Include="Entity.cs" />
     <Compile Include="Events\AggregateChangedEvent.cs" />
+    <Compile Include="Events\EventAggregator.cs" />
     <Compile Include="Events\EventBroker.cs" />
+    <Compile Include="Events\EventPublishingChildScopeBehaviour.cs" />
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\IEventBroker.cs" />
+    <Compile Include="Events\IEventBrokerConfiguration.cs" />
+    <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Events\IHandelDomainEvents.cs" />
     <Compile Include="Events\IHandle.cs" />
     <Compile Include="Events\IHandleAsync.cs" />

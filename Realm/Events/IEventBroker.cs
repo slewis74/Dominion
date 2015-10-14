@@ -1,7 +1,6 @@
 ﻿namespace Realm.Events
 {
-    public interface IEventBroker
+    public interface IEventBroker : IEventPublisher, IEventBrokerConfiguration
     {
-        void Publish<TEvent>(TEvent eventInstance) where TEvent : class, IDomainEvent;
     }
 }

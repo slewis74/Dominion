@@ -1,6 +1,6 @@
 ﻿namespace Realm
 {
-    public interface IAggregate<TId> : IEntity<TId>
+    public interface IAggregate<out TId> : IEntity<TId>
     {
     }
 }
