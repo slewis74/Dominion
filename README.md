@@ -71,3 +71,31 @@ This listens to the ObjectMaterialized event, and if the object is of the generi
         .InstancePerRequest();
 
 ```
+
+**But wait, there's more!!!**  You don't need to write those yourself, Realm.EntityFramework contains not only the DbContextExtensions implementation shown above, ready for you to ignore.  Why ignore it?  Because you don't need to even call it yourself! There a WithEventPublisherOnMaterialized registration extension, so you just need to do the following.    
+
+```csharp
+    builder.RegisterType<DbContext>()
+        .As<IDataContext>()
+        .WithParameter("defaultConnection", "some connection string")
+        .WithEventPublisherOnMaterialized()
+        .InstancePerRequest();
+
+```
+
+#EventBroker container registration
+Last, but not least, some help with registering the Event Handler types.  Realm contains some extensions methods for helping with scanning an Assembly for Handler types, you'll want something similar to the following
+
+```csharp
+    builder.RegisterType<EventBroker>()
+		.AsImplementedInterfaces()
+		.OnActivated(c =>
+	    {
+	        c.Instance
+	            .SubscribeHandlersInAssembly(Assembly.GetAssembly(typeof(SomeType)))
+	            .SubscribeHandlersInAssembly(Assembly.GetAssembly(typeof(ThisModule)));
+	    })
+		.InstancePerRequest();
+
+```
+The number of calls will depends on your app, and how many Assemblies you have with handlers that need to be registered.

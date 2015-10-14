@@ -51,6 +51,7 @@ namespace Realm.Tests.EventBrokerScenarios
         [TestMethod]
         public void SyncLifetimeScopeIsntSameAsPrevious()
         {
+            _lastLifetimeScopeTag = null;
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
@@ -75,6 +76,7 @@ namespace Realm.Tests.EventBrokerScenarios
         [TestMethod]
         public void AsyncLifetimeScopeIsSameAsPrevious()
         {
+            _lastLifetimeScopeTag = null;
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
