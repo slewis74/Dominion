@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Realm.EntityFramework</id>
+        <version>1.0.0</version>
+        <authors>Shannon Lewis</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Realm components for Entity Framework.</description>
+		<projectUrl>https://github.com/slewis74/Realm</projectUrl>
+        <dependencies>
+            <dependency id="Realm" version="1.0.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Realm.EntityFramework\Bin\Release\Realm.EntityFramework.dll" target="lib\net45\Realm.EntityFramework.dll" />
+    </files>
+</package>
