@@ -5,7 +5,7 @@
         <version>1.0.0</version>
         <authors>Shannon Lewis</authors>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>.NET components for build domains.</description>
+        <description>.NET components for building domains.</description>
 		<projectUrl>https://github.com/slewis74/Realm</projectUrl>
         <dependencies>
             <dependency id="Autofac" version="3.5.2" />
