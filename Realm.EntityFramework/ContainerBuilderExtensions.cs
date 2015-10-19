@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using Autofac;
 using Autofac.Builder;
-using Realm.Events;
+using Realm.Messages;
 
 namespace Realm.EntityFramework
 {
@@ -14,7 +14,7 @@ namespace Realm.EntityFramework
                 var dbContext = c.Instance as DbContext;
                 if (dbContext == null)
                     return;
-                var publisher = c.Context.Resolve<IEventPublisher>();
+                var publisher = c.Context.Resolve<IMessagePublisher>();
                 dbContext.OnObjectOfTypeMaterialized<IPublishDomainEvents>(t => t.SetPublisher(publisher));
             });
         }

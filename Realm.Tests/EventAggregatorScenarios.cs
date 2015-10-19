@@ -1,7 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using Realm.Events;
+using Realm.Messages;
 
 namespace Realm.Tests
 {
@@ -12,17 +12,17 @@ namespace Realm.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void EnsureAnExceptionIsRaisedIfTheEventBrokerIsntSet()
         {
-            EventAggregator.Publish(new TestEvent());
+            MessageAggregator.Publish(new TestEvent());
         }
 
         [TestMethod]
         public void EnsureThatAMockedEventBrokerRegistersAPublishCorrectly()
         {
-            var broker = Substitute.For<IEventBroker>();
-            EventAggregator.SetBroker(broker);
+            var broker = Substitute.For<IMessageBroker>();
+            MessageAggregator.SetBroker(broker);
 
             var testEvent = new TestEvent();
-            EventAggregator.Publish(testEvent);
+            MessageAggregator.Publish(testEvent);
 
             broker.Received(1).Publish(Arg.Is(testEvent));
         }

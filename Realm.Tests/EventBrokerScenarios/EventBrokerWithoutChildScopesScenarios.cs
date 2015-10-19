@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Realm.Events;
+using Realm.Messages;
 using Shouldly;
 
 namespace Realm.Tests.EventBrokerScenarios
@@ -12,7 +12,7 @@ namespace Realm.Tests.EventBrokerScenarios
     public class EventBrokerWithoutChildScopesScenarios
     {
         private static IContainer _container;
-        private EventBroker _subject;
+        private MessageBroker _subject;
 
         [TestInitialize]
         public void SetUp()
@@ -22,61 +22,61 @@ namespace Realm.Tests.EventBrokerScenarios
             builder.RegisterType<TestAsyncHandler>().AsSelf().InstancePerLifetimeScope();
 
             _container = builder.Build();
-            _subject = new EventBroker(_container, EventPublishingChildScopeBehaviour.NoChildScopes);
+            _subject = new MessageBroker(_container, MessagePublishingChildScopeBehaviour.NoChildScopes);
         }
 
         [TestMethod]
-        public void HandlerGetsCalled()
+        public async Task HandlerGetsCalled()
         {
             TestSyncHandler.HandleGotCalled = false;
 
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestSyncHandler.HandleGotCalled.ShouldBe(true);
         }
 
         [TestMethod]
-        public void SyncLifetimeScopeIsTheContainer()
+        public async Task SyncLifetimeScopeIsTheContainer()
         {
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestSyncHandler.LifetimeScopeWasContainer.ShouldBe(true);
         }
 
         [TestMethod]
-        public void AsyncLifetimeScopeIsTheContainer()
+        public async Task AsyncLifetimeScopeIsTheContainer()
         {
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             TestAsyncHandler.LifetimeScopeWasContainer.ShouldBe(true);
         }
 
         [TestMethod]
-        public void AsyncHandlerReturnsImmediately()
+        public async Task AsyncHandlerExecutesBeforeReturn()
         {
             TestAsyncHandler.HandleGotCalled = false;
 
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
-            TestAsyncHandler.HandleGotCalled.ShouldBe(false);
+            TestAsyncHandler.HandleGotCalled.ShouldBe(true);
         }
 
         [TestMethod]
-        public void AsyncHandlerRunInTheBackground()
+        public async Task AsyncHandlerRunInTheBackground()
         {
             TestAsyncHandler.HandleGotCalled = false;
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
@@ -84,7 +84,7 @@ namespace Realm.Tests.EventBrokerScenarios
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
 

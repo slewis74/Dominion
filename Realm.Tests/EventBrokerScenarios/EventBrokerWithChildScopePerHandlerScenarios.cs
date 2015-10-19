@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Realm.Events;
+using Realm.Messages;
 using Shouldly;
 
 namespace Realm.Tests.EventBrokerScenarios
@@ -11,7 +11,7 @@ namespace Realm.Tests.EventBrokerScenarios
     public class EventBrokerWithChildScopePerHandlerScenarios
     {
         private static IContainer _container;
-        private EventBroker _subject;
+        private MessageBroker _subject;
 
         [TestInitialize]
         public void SetUp()
@@ -21,60 +21,60 @@ namespace Realm.Tests.EventBrokerScenarios
             builder.RegisterType<TestAsyncHandler>().AsSelf().InstancePerLifetimeScope();
 
             _container = builder.Build();
-            _subject = new EventBroker(_container, EventPublishingChildScopeBehaviour.ChildScopePerHandler);
+            _subject = new MessageBroker(_container, MessagePublishingChildScopeBehaviour.ChildScopePerHandler);
         }
 
         [TestMethod]
-        public void HandlerGetsCalled()
+        public async Task HandlerGetsCalled()
         {
             TestSyncHandler.HandleGotCalled = false;
 
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestSyncHandler.HandleGotCalled.ShouldBe(true);
         }
 
         [TestMethod]
-        public void SyncLifetimeScopeIsntOfTheContainer()
+        public async Task SyncLifetimeScopeIsntOfTheContainer()
         {
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestSyncHandler.LifetimeScopeWasContainer.ShouldBe(false);
         }
 
         [TestMethod]
-        public void SyncLifetimeScopeIsntSameAsPrevious()
+        public async Task SyncLifetimeScopeIsntSameAsPrevious()
         {
             _lastLifetimeScopeTag = null;
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestSyncHandler.LifetimeScopeTagWasSameAsPrevious.ShouldBe(false);
         }
 
         [TestMethod]
-        public void AsyncLifetimeScopeIsntOfTheContainer()
+        public async Task AsyncLifetimeScopeIsntOfTheContainer()
         {
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             TestAsyncHandler.LifetimeScopeWasContainer.ShouldBe(false);
         }
 
         [TestMethod]
-        public void AsyncLifetimeScopeIsntSameAsPrevious()
+        public async Task AsyncLifetimeScopeIsntSameAsPrevious()
         {
             _lastLifetimeScopeTag = null;
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
@@ -82,7 +82,7 @@ namespace Realm.Tests.EventBrokerScenarios
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestEvent();
-            _subject.Publish(e);
+            await _subject.Publish(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             TestAsyncHandler.LifetimeScopeTagWasSameAsPrevious.ShouldBe(false);

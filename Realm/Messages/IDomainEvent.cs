@@ -1,4 +1,4 @@
-namespace Realm.Events
+namespace Realm.Messages
 {
     public interface IDomainEvent
     { }

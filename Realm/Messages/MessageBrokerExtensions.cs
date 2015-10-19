@@ -2,21 +2,21 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Realm.Events
+namespace Realm.Messages
 {
-    public static class EventBrokerExtensions
+    public static class MessageBrokerExtensions
     {
-        public static IEventBroker SubscribeHandlersInAssembly(this IEventBroker eventBroker, Assembly assembly)
+        public static IMessageBroker SubscribeHandlersInAssembly(this IMessageBroker messageBroker, Assembly assembly)
         {
             var handlers = assembly.GetTypes().Where(t => t.GetInterfaces().Any(IsHandler));
             foreach (var handler in handlers)
             {
                 var events = handler.GetInterfaces().Where(IsHandler).Select(type => type.GenericTypeArguments.Single());
                 foreach (var @event in events)
-                    eventBroker.Subscribe(@event, handler);
+                    messageBroker.Subscribe(@event, handler);
             }
 
-            return eventBroker;
+            return messageBroker;
         }
 
         private static bool IsHandler(Type type)

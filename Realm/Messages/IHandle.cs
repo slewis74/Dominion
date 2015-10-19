@@ -1,6 +1,6 @@
-namespace Realm.Events
+namespace Realm.Messages
 {
-    public interface IHandle<in TEvent> : IHandelDomainEvents
+    public interface IHandle<in TEvent> : IHandleDomainEvents
         where TEvent : IDomainEvent
     {
         void Handle(TEvent eventInstance);

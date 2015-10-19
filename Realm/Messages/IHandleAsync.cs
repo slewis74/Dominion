@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Realm.Events
+namespace Realm.Messages
 {
-    public interface IHandleAsync<in TEvent> : IHandelDomainEvents
+    public interface IHandleAsync<in TEvent> : IHandleDomainEvents
         where TEvent : IDomainEvent
     {
         Task HandleAsync(TEvent eventInstance);
