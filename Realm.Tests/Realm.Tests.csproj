@@ -67,6 +67,9 @@
     <Compile Include="EventBrokerScenarios\EventBrokerWithChildScopePerPublishScenarios.cs" />
     <Compile Include="EventBrokerScenarios\EventBrokerWithoutChildScopesScenarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestBrokerScenarios\MulticastRequest\RequestBrokerWithChildScopePerHandlerScenarios.cs" />
+    <Compile Include="RequestBrokerScenarios\MulticastRequest\RequestBrokerWithChildScopePerPublishScenarios.cs" />
+    <Compile Include="RequestBrokerScenarios\MulticastRequest\RequestBrokerWithoutChildScopesScenarios.cs" />
     <Compile Include="RequestBrokerScenarios\Request\RequestBrokerWithChildScopePerHandlerScenarios.cs" />
     <Compile Include="RequestBrokerScenarios\Request\RequestBrokerWithChildScopePerPublishScenarios.cs" />
     <Compile Include="RequestBrokerScenarios\Request\RequestBrokerWithoutChildScopesScenarios.cs" />
@@ -80,9 +83,7 @@
       <Name>Realm</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RequestBrokerScenarios\MulticastRequest\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

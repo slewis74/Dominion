@@ -144,7 +144,7 @@ namespace Realm.Messages
                 }
             }
 
-            return Enumerable.Empty<TResponse>();
+            return responses;
         }
 
         private TResponse ExecuteRequestHandler<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request, Type handlerType, ILifetimeScope lifetimeScope)
