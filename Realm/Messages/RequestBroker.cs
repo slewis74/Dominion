@@ -19,32 +19,36 @@ namespace Realm.Messages
             _childScopeBehaviour = childScopeBehaviour;
         }
 
-        public void Subscribe(Type @event, Type handler)
+        public void Subscribe(Type request, Type handler)
         {
-            if (!typeof(IDomainRequest).IsAssignableFrom(@event))
-                throw new ArgumentException("{0} must implement IDomainEvent", @event.Name);
+            if (!typeof(IDomainRequest).IsAssignableFrom(request))
+                throw new ArgumentException("{0} must implement IDomainRequest", request.Name);
 
-            if (typeof(IHandleRequest<,>).MakeGenericType(@event).IsAssignableFrom(handler))
+            var genericTypeArguments = request.BaseType.GenericTypeArguments;
+            var requestType = genericTypeArguments[0];
+            var responseType = genericTypeArguments[1];
+
+            if (typeof(IHandleRequest<,>).MakeGenericType(requestType, responseType).IsAssignableFrom(handler))
             {
-                if (_requestHandlers.ContainsKey(@event))
+                if (_requestHandlers.ContainsKey(request))
                 {
-                    _requestHandlers[@event].Add(handler);
+                    _requestHandlers[request].Add(handler);
                 }
                 else
                 {
-                    _requestHandlers.Add(@event, new List<Type> { handler });
+                    _requestHandlers.Add(request, new List<Type> { handler });
                 }
             }
 
-            if (typeof(IHandleRequestAsync<,>).MakeGenericType(@event).IsAssignableFrom(handler))
+            if (typeof(IHandleRequestAsync<,>).MakeGenericType(requestType, responseType).IsAssignableFrom(handler))
             {
-                if (_asyncRequestHandlers.ContainsKey(@event))
+                if (_asyncRequestHandlers.ContainsKey(request))
                 {
-                    _asyncRequestHandlers[@event].Add(handler);
+                    _asyncRequestHandlers[request].Add(handler);
                 }
                 else
                 {
-                    _asyncRequestHandlers.Add(@event, new List<Type> { handler });
+                    _asyncRequestHandlers.Add(request, new List<Type> { handler });
                 }
             }
 

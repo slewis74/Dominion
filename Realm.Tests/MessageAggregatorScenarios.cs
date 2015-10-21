@@ -6,7 +6,7 @@ using Realm.Messages;
 namespace Realm.Tests
 {
     [TestClass]
-    public class EventAggregatorScenarios
+    public class MessageAggregatorScenarios
     {
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]

@@ -21,7 +21,7 @@ namespace Realm.Messages
         {
             if (typeof(IDomainEvent).IsAssignableFrom(message))
                 _eventBroker.Subscribe(message, handler);
-            else if (typeof(IDomainEvent).IsAssignableFrom(message))
+            else if (typeof(IDomainRequest).IsAssignableFrom(message))
                 _requestBroker.Subscribe(message, handler);
             else
                 throw new ArgumentException("{0} must implement IDomainEvent or IRequest", message.Name);

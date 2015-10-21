@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Entity.cs" />
     <Compile Include="Messages\AggregateChangedEvent.cs" />
+    <Compile Include="Messages\DomainRequest.cs" />
     <Compile Include="Messages\EventBroker.cs" />
     <Compile Include="Messages\IDomainRequest.cs" />
     <Compile Include="Messages\IDomainResponse.cs" />

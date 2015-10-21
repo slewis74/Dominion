@@ -62,11 +62,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="EventAggregatorScenarios.cs" />
+    <Compile Include="MessageAggregatorScenarios.cs" />
     <Compile Include="EventBrokerScenarios\EventBrokerWithChildScopePerHandlerScenarios.cs" />
     <Compile Include="EventBrokerScenarios\EventBrokerWithChildScopePerPublishScenarios.cs" />
     <Compile Include="EventBrokerScenarios\EventBrokerWithoutChildScopesScenarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestBrokerScenarios\Request\RequestBrokerWithChildScopePerHandlerScenarios.cs" />
+    <Compile Include="RequestBrokerScenarios\Request\RequestBrokerWithChildScopePerPublishScenarios.cs" />
+    <Compile Include="RequestBrokerScenarios\Request\RequestBrokerWithoutChildScopesScenarios.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -76,6 +79,9 @@
       <Project>{a5458637-3a00-4a53-842b-19f867ea214f}</Project>
       <Name>Realm</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RequestBrokerScenarios\MulticastRequest\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
