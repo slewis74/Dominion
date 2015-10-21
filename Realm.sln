@@ -8,6 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BDD5145-175E-419F-8C62-BFE54A0EF43F}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		Realm.EntityFramework.nuspec = Realm.EntityFramework.nuspec
+		Realm.nuspec = Realm.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Realm.Tests", "Realm.Tests\Realm.Tests.csproj", "{5E467B51-CC48-48E9-A4EE-BFD3286A9576}"
