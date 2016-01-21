@@ -1,15 +1,15 @@
-Realm
+Dominion
 =====
 
 Infrastructure for building Domains.
 
 #Intro
-Realm contains interface definitions and implementations for a number of components that can be used when building Domains.
+Dominion contains interface definitions and implementations for a number of components that can be used when building Domains.
 
-Using Realm, Domain Events can be brokered between publishers and registered subscribers.  A subscriber is a registered Type, not an instance of the Type, which implements the IHandle<> interface.
+Using Dominion, Domain Events can be brokered between publishers and registered subscribers.  A subscriber is a registered Type, not an instance of the Type, which implements the IHandle<> interface.
 
 # EventBroker
-Realm contains an EventBroker, which manages the type subscriptions for the event handlers, and publishes event instances to them.
+Dominion contains an EventBroker, which manages the type subscriptions for the event handlers, and publishes event instances to them.
 
 ```csharp
 	eventBroker.Publish(new SomeDomainEvent(someData));
@@ -72,7 +72,7 @@ This listens to the ObjectMaterialized event, and if the object is of the generi
 
 ```
 
-**But wait, there's more!!!**  You don't need to write those yourself, Realm.EntityFramework contains not only the DbContextExtensions implementation shown above, it contains a WithEventPublisherOnMaterialized registration extension, so you don't even need to worry about the DbContextExtensions yourself, you just do the following    
+**But wait, there's more!!!**  You don't need to write those yourself, Dominion.EntityFramework contains not only the DbContextExtensions implementation shown above, it contains a WithEventPublisherOnMaterialized registration extension, so you don't even need to worry about the DbContextExtensions yourself, you just do the following    
 
 ```csharp
     builder.RegisterType<DbContext>()
@@ -84,7 +84,7 @@ This listens to the ObjectMaterialized event, and if the object is of the generi
 ```
 
 #EventBroker container registration
-Last, but not least, some help with registering the Event Handler types.  Realm contains some extensions methods for helping with scanning an Assembly for Handler types, you'll want something similar to the following
+Last, but not least, some help with registering the Event Handler types.  Dominion contains some extensions methods for helping with scanning an Assembly for Handler types, you'll want something similar to the following
 
 ```csharp
     builder.RegisterType<EventBroker>()
