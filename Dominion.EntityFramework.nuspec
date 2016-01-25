@@ -9,7 +9,7 @@
     <description>Dominion components for Entity Framework.</description>
     <projectUrl>https://github.com/slewis74/Dominion</projectUrl>
     <dependencies>
-      <dependency id="Dominion" version="1.0.0" />
+      <dependency id="Dominion" version="0.1.0" />
     </dependencies>
   </metadata>
   <files>
