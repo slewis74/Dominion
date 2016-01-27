@@ -6,7 +6,7 @@ namespace Dominion.Messages
 {
     public static class MessageBrokerExtensions
     {
-        public static IMessageBroker SubscribeHandlersInAssembly(this IMessageBroker messageBroker, Assembly assembly)
+        public static MessageBroker SubscribeHandlersInAssembly(this MessageBroker messageBroker, Assembly assembly)
         {
             var handlers = assembly.GetTypes().Where(t => t.GetInterfaces().Any(IsHandler));
             foreach (var handler in handlers)

@@ -53,13 +53,10 @@
     <Compile Include="Messages\IHandleDomainRequests.cs" />
     <Compile Include="Messages\IHandleRequest.cs" />
     <Compile Include="Messages\IHandleRequestAsync.cs" />
-    <Compile Include="Messages\MessageAggregator.cs" />
     <Compile Include="Messages\MessageBroker.cs" />
     <Compile Include="Messages\MessageBrokerExtensions.cs" />
     <Compile Include="Messages\MessagePublishingChildScopeBehaviour.cs" />
     <Compile Include="Messages\IDomainEvent.cs" />
-    <Compile Include="Messages\IMessageBroker.cs" />
-    <Compile Include="Messages\IMessageBrokerConfiguration.cs" />
     <Compile Include="Messages\IMessagePublisher.cs" />
     <Compile Include="Messages\IHandleDomainEvents.cs" />
     <Compile Include="Messages\IHandle.cs" />

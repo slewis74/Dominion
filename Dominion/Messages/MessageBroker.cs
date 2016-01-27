@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Autofac;
 
 namespace Dominion.Messages
 {
-    public class MessageBroker : IMessageBroker
+    public class MessageBroker : IMessagePublisher
     {
         private readonly EventBroker _eventBroker;
         private readonly RequestBroker _requestBroker;

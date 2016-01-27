@@ -62,10 +62,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MessageAggregatorScenarios.cs" />
-    <Compile Include="EventBrokerScenarios\EventBrokerWithChildScopePerHandlerScenarios.cs" />
-    <Compile Include="EventBrokerScenarios\EventBrokerWithChildScopePerPublishScenarios.cs" />
-    <Compile Include="EventBrokerScenarios\EventBrokerWithoutChildScopesScenarios.cs" />
+    <Compile Include="MessageBrokerScenarios\MessageBrokerWithChildScopePerHandlerScenarios.cs" />
+    <Compile Include="MessageBrokerScenarios\MessageBrokerWithChildScopePerPublishScenarios.cs" />
+    <Compile Include="MessageBrokerScenarios\MessageBrokerWithoutChildScopesScenarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestBrokerScenarios\MulticastRequest\RequestBrokerWithChildScopePerHandlerScenarios.cs" />
     <Compile Include="RequestBrokerScenarios\MulticastRequest\RequestBrokerWithChildScopePerPublishScenarios.cs" />

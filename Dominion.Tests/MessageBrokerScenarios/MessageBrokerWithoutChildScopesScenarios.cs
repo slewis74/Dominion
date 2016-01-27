@@ -1,14 +1,15 @@
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dominion.Messages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
-namespace Dominion.Tests.EventBrokerScenarios
+namespace Dominion.Tests.MessageBrokerScenarios
 {
     [TestClass]
-    public class EventBrokerWithChildScopePerPublishScenarios
+    public class MessageBrokerWithoutChildScopesScenarios
     {
         private static IContainer _container;
         private MessageBroker _subject;
@@ -21,7 +22,7 @@ namespace Dominion.Tests.EventBrokerScenarios
             builder.RegisterType<TestAsyncHandler>().AsSelf().InstancePerLifetimeScope();
 
             _container = builder.Build();
-            _subject = new MessageBroker(_container, MessagePublishingChildScopeBehaviour.ChildScopePerMessage);
+            _subject = new MessageBroker(_container, MessagePublishingChildScopeBehaviour.NoChildScopes);
         }
 
         [TestMethod]
@@ -38,30 +39,18 @@ namespace Dominion.Tests.EventBrokerScenarios
         }
 
         [TestMethod]
-        public async Task SyncLifetimeScopeIsntOfTheContainer()
+        public async Task SyncLifetimeScopeIsTheContainer()
         {
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
             await _subject.Publish(e);
 
-            TestSyncHandler.LifetimeScopeWasContainer.ShouldBe(false);
+            TestSyncHandler.LifetimeScopeWasContainer.ShouldBe(true);
         }
 
         [TestMethod]
-        public async Task SyncLifetimeScopeIsntSameAsPrevious()
-        {
-            _lastLifetimeScopeTag = null;
-            _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
-
-            var e = new TestEvent();
-            await _subject.Publish(e);
-
-            TestSyncHandler.LifetimeScopeTagWasSameAsPrevious.ShouldBe(false);
-        }
-
-        [TestMethod]
-        public async Task AsyncLifetimeScopeIsntOfTheContainer()
+        public async Task AsyncLifetimeScopeIsTheContainer()
         {
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
@@ -70,25 +59,37 @@ namespace Dominion.Tests.EventBrokerScenarios
             await _subject.Publish(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
-            TestAsyncHandler.LifetimeScopeWasContainer.ShouldBe(false);
+            TestAsyncHandler.LifetimeScopeWasContainer.ShouldBe(true);
         }
 
         [TestMethod]
-        public async Task AsyncLifetimeScopeIsSameAsPrevious()
+        public async Task AsyncHandlerExecutesBeforeReturn()
         {
-            _lastLifetimeScopeTag = null;
-            _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
+            TestAsyncHandler.HandleGotCalled = false;
+
             _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
+
+            var e = new TestEvent();
+            await _subject.Publish(e);
+
+            TestAsyncHandler.HandleGotCalled.ShouldBe(true);
+        }
+
+        [TestMethod]
+        public async Task AsyncHandlerRunInTheBackground()
+        {
+            TestAsyncHandler.HandleGotCalled = false;
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
+
+            _subject.Subscribe(typeof(TestEvent), typeof(TestAsyncHandler));
 
             var e = new TestEvent();
             await _subject.Publish(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
-            TestAsyncHandler.LifetimeScopeTagWasSameAsPrevious.ShouldBe(true);
-        }
 
-        private static object _lastLifetimeScopeTag;
+            TestAsyncHandler.HandleGotCalled.ShouldBe(true);
+        }
 
         public class TestEvent : IDomainEvent { }
 
@@ -97,12 +98,9 @@ namespace Dominion.Tests.EventBrokerScenarios
             public TestSyncHandler(ILifetimeScope lifetimeScope)
             {
                 LifetimeScopeWasContainer = lifetimeScope.Tag == _container.Tag;
-                LifetimeScopeTagWasSameAsPrevious = lifetimeScope.Tag == _lastLifetimeScopeTag;
-                _lastLifetimeScopeTag = lifetimeScope.Tag;
             }
 
             public static bool LifetimeScopeWasContainer { get; set; }
-            public static bool LifetimeScopeTagWasSameAsPrevious { get; set; }
             public static bool HandleGotCalled { get; set; }
 
             public void Handle(TestEvent args)
@@ -116,24 +114,24 @@ namespace Dominion.Tests.EventBrokerScenarios
             public TestAsyncHandler(ILifetimeScope lifetimeScope)
             {
                 LifetimeScopeWasContainer = lifetimeScope.Tag == _container.Tag;
-                LifetimeScopeTagWasSameAsPrevious = lifetimeScope.Tag == _lastLifetimeScopeTag;
-                _lastLifetimeScopeTag = lifetimeScope.Tag;
             }
 
             public static ManualResetEvent ResetEvent { get; set; }
             public static bool LifetimeScopeWasContainer { get; set; }
-            public static bool LifetimeScopeTagWasSameAsPrevious { get; set; }
             public static bool HandleGotCalled { get; set; }
 
 #pragma warning disable 1998
             public async Task HandleAsync(TestEvent args)
 #pragma warning restore 1998
             {
+                Console.WriteLine("Sleeping...");
                 Thread.Sleep(50);
+                Console.WriteLine("Awake again...");
                 HandleGotCalled = true;
+                Console.WriteLine("HandleGotCalled = true");
 
-                if (ResetEvent != null)
-                    ResetEvent.Set();
+                ResetEvent?.Set();
+                Console.WriteLine("Event set...");
             }
         }
     }

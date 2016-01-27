@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dominion.Messages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
-namespace Dominion.Tests.EventBrokerScenarios
+namespace Dominion.Tests.MessageBrokerScenarios
 {
     [TestClass]
-    public class EventBrokerWithChildScopePerHandlerScenarios
+    public class MessageBrokerWithChildScopePerHandlerScenarios
     {
         private static IContainer _container;
         private MessageBroker _subject;
