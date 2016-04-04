@@ -32,7 +32,7 @@ namespace Dominion.Tests.MessageBrokerScenarios
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            await _subject.Publish(e);
+            await _subject.PublishAsync(e);
 
             TestSyncHandler.HandleGotCalled.ShouldBe(true);
         }
@@ -43,7 +43,7 @@ namespace Dominion.Tests.MessageBrokerScenarios
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            await _subject.Publish(e);
+            await _subject.PublishAsync(e);
 
             TestSyncHandler.LifetimeScopeWasContainer.ShouldBe(false);
         }
@@ -55,7 +55,7 @@ namespace Dominion.Tests.MessageBrokerScenarios
             _subject.Subscribe(typeof(TestEvent), typeof(TestSyncHandler));
 
             var e = new TestEvent();
-            await _subject.Publish(e);
+            await _subject.PublishAsync(e);
 
             TestSyncHandler.LifetimeScopeTagWasSameAsPrevious.ShouldBe(false);
         }
@@ -67,7 +67,7 @@ namespace Dominion.Tests.MessageBrokerScenarios
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestEvent();
-            await _subject.Publish(e);
+            await _subject.PublishAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             TestAsyncHandler.LifetimeScopeWasContainer.ShouldBe(false);
@@ -82,7 +82,7 @@ namespace Dominion.Tests.MessageBrokerScenarios
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestEvent();
-            await _subject.Publish(e);
+            await _subject.PublishAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             TestAsyncHandler.LifetimeScopeTagWasSameAsPrevious.ShouldBe(true);

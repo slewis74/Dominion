@@ -31,7 +31,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.MulticastRequest
             _subject.Subscribe(typeof(TestRequest), typeof(TestSyncHandler));
 
             var e = new TestRequest();
-            var response = await _subject.MulticastRequest(e);
+            var response = await _subject.MulticastRequestAsync(e);
 
             response.Count().ShouldBe(1);
         }
@@ -45,7 +45,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.MulticastRequest
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestRequest();
-            var response = await _subject.MulticastRequest(e);
+            var response = await _subject.MulticastRequestAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
 
@@ -61,7 +61,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.MulticastRequest
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestRequest();
-            var response = await _subject.MulticastRequest(e);
+            var response = await _subject.MulticastRequestAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
 
@@ -74,7 +74,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.MulticastRequest
             _subject.Subscribe(typeof(TestRequest), typeof(TestSyncHandler));
 
             var e = new TestRequest();
-            var response = await _subject.MulticastRequest(e);
+            var response = await _subject.MulticastRequestAsync(e);
 
             response.First().LifetimeScopeWasContainer.ShouldBe(true);
         }
@@ -86,7 +86,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.MulticastRequest
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestRequest();
-            var response = await _subject.MulticastRequest(e);
+            var response = await _subject.MulticastRequestAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             response.First().LifetimeScopeWasContainer.ShouldBe(true);
@@ -101,7 +101,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.MulticastRequest
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestRequest();
-            var response = await _subject.MulticastRequest(e);
+            var response = await _subject.MulticastRequestAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
 

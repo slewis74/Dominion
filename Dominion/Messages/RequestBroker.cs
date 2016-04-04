@@ -54,7 +54,7 @@ namespace Dominion.Messages
 
         }
 
-        public async Task<TResponse> Request<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request) 
+        public async Task<TResponse> RequestAsync<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request) 
             where TRequest : IDomainRequest<TRequest, TResponse> 
             where TResponse : IDomainResponse
         {
@@ -62,16 +62,16 @@ namespace Dominion.Messages
             {
                 using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
                 {
-                    return await DoRequest(request, childLifetimeScope);
+                    return await DoRequestAsync(request, childLifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
             {
-                return await DoRequest(request, _lifetimeScope);
+                return await DoRequestAsync(request, _lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
-        private async Task<TResponse> DoRequest<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request, ILifetimeScope lifetimeScope)
+        private async Task<TResponse> DoRequestAsync<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request, ILifetimeScope lifetimeScope)
             where TRequest : IDomainRequest<TRequest, TResponse>
             where TResponse : IDomainResponse
         {
@@ -91,7 +91,7 @@ namespace Dominion.Messages
             {
                 foreach (var handler in foundHandlers)
                 {
-                    var response = await ExecuteRequestHandlerAsync(request, handler, lifetimeScope);
+                    var response = await ExecuteRequestHandlerAsync(request, handler, lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                     if (response != null)
                         return response;
                 }
@@ -100,7 +100,7 @@ namespace Dominion.Messages
             return default(TResponse);
         }
 
-        public async Task<IEnumerable<TResponse>> MulticastRequest<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request)
+        public async Task<IEnumerable<TResponse>> MulticastRequestAsync<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request)
             where TRequest : IDomainRequest<TRequest, TResponse>
             where TResponse : IDomainResponse
         {
@@ -108,16 +108,16 @@ namespace Dominion.Messages
             {
                 using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
                 {
-                    return await DoMulticastRequest(request, childLifetimeScope);
+                    return await DoMulticastRequestAsync(request, childLifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
             {
-                return await DoMulticastRequest(request, _lifetimeScope);
+                return await DoMulticastRequestAsync(request, _lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
-        public async Task<IEnumerable<TResponse>> DoMulticastRequest<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request, ILifetimeScope lifetimeScope)
+        public async Task<IEnumerable<TResponse>> DoMulticastRequestAsync<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request, ILifetimeScope lifetimeScope)
             where TRequest : IDomainRequest<TRequest, TResponse>
             where TResponse : IDomainResponse
         {
@@ -138,7 +138,7 @@ namespace Dominion.Messages
             {
                 foreach (var handler in foundHandlers)
                 {
-                    var response = await ExecuteRequestHandlerAsync(request, handler, lifetimeScope);
+                    var response = await ExecuteRequestHandlerAsync(request, handler, lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                     if (response != null)
                         responses.Add(response);
                 }
@@ -180,12 +180,12 @@ namespace Dominion.Messages
             {
                 using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
                 {
-                    return await CallRequestHandlerAsync(request, handlerType, childLifetimeScope);
+                    return await CallRequestHandlerAsync(request, handlerType, childLifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
             {
-                return await CallRequestHandlerAsync(request, handlerType, lifetimeScope);
+                return await CallRequestHandlerAsync(request, handlerType, lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
@@ -194,7 +194,7 @@ namespace Dominion.Messages
             where TResponse : IDomainResponse
         {
             var handler = (dynamic)lifetimeScope.Resolve(handlerType);
-            return await handler.HandleAsync((dynamic)request);
+            return await handler.HandleAsync((dynamic)request).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private IEnumerable<Type> GetRequestHandlers(Type requestType)

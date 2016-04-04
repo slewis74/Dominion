@@ -26,23 +26,23 @@ namespace Dominion.Messages
                 throw new ArgumentException("{0} must implement IDomainEvent or IRequest", message.Name);
         }
 
-        public async Task Publish<TEvent>(TEvent eventInstance) where TEvent : class, IDomainEvent
+        public Task PublishAsync<TEvent>(TEvent eventInstance) where TEvent : class, IDomainEvent
         {
-            await _eventBroker.Publish(eventInstance);
+            return _eventBroker.PublishAsync(eventInstance);
         }
 
-        public async Task<TResponse> Request<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request) 
+        public Task<TResponse> RequestAsync<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request) 
             where TRequest : IDomainRequest<TRequest, TResponse> 
             where TResponse : IDomainResponse
         {
-            return await _requestBroker.Request(request);
+            return _requestBroker.RequestAsync(request);
         }
 
-        public async Task<IEnumerable<TResponse>> MulticastRequest<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request) 
+        public Task<IEnumerable<TResponse>> MulticastRequestAsync<TRequest, TResponse>(IDomainRequest<TRequest, TResponse> request) 
             where TRequest : IDomainRequest<TRequest, TResponse> 
             where TResponse : IDomainResponse
         {
-            return await _requestBroker.MulticastRequest(request);
+            return _requestBroker.MulticastRequestAsync(request);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.Request
             _subject.Subscribe(typeof(TestRequest), typeof(TestSyncHandler));
 
             var e = new TestRequest();
-            var response = await _subject.Request(e);
+            var response = await _subject.RequestAsync(e);
 
             response.ShouldNotBe(null);
         }
@@ -44,7 +44,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.Request
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestRequest();
-            var response = await _subject.Request(e);
+            var response = await _subject.RequestAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             response.Id.ShouldBe("SyncHandler");
@@ -56,7 +56,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.Request
             _subject.Subscribe(typeof(TestRequest), typeof(TestSyncHandler));
 
             var e = new TestRequest();
-            var response = await _subject.Request(e);
+            var response = await _subject.RequestAsync(e);
 
             response.LifetimeScopeWasContainer.ShouldBe(false);
         }
@@ -68,7 +68,7 @@ namespace Dominion.Tests.RequestBrokerScenarios.Request
             TestAsyncHandler.ResetEvent = new ManualResetEvent(false);
 
             var e = new TestRequest();
-            var response = await _subject.Request(e);
+            var response = await _subject.RequestAsync(e);
 
             TestAsyncHandler.ResetEvent.WaitOne(500);
             response.LifetimeScopeWasContainer.ShouldBe(false);

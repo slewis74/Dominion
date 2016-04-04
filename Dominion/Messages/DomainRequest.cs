@@ -8,7 +8,7 @@ namespace Dominion.Messages
     {
         protected DomainRequest()
         {
-            // The self referencing in the TRequest is so the calls to RequestBroker.MulticastRequest can
+            // The self referencing in the TRequest is so the calls to RequestBroker.MulticastRequestAsync can
             // imply the types from the request object instance.
             if (GetType() != typeof(TRequest))
                 throw new ArgumentException("Requests must reference their own type as the first generic type parameter");

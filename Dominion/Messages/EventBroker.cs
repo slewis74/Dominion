@@ -49,22 +49,22 @@ namespace Dominion.Messages
             }
         }
 
-        public async Task Publish<T>(T @event) where T : class, IDomainEvent
+        public async Task PublishAsync<T>(T @event) where T : class, IDomainEvent
         {
             if (_childScopeBehaviour == MessagePublishingChildScopeBehaviour.ChildScopePerMessage)
             {
                 using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
                 {
-                    await DoPublish(@event, childLifetimeScope);
+                    await DoPublishAsync(@event, childLifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
             {
-                await DoPublish(@event, _lifetimeScope);
+                await DoPublishAsync(@event, _lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
-        private async Task DoPublish<T>(T @event, ILifetimeScope lifetimeScope) where T : class, IDomainEvent
+        private async Task DoPublishAsync<T>(T @event, ILifetimeScope lifetimeScope) where T : class, IDomainEvent
         {
             var foundHandlers = GetEventHandlers(@event.GetType()).ToList();
             if (foundHandlers.Any())
@@ -80,7 +80,7 @@ namespace Dominion.Messages
             {
                 foreach (var handler in foundHandlers)
                 {
-                    await ExecuteEventHandlerAsync(@event, handler, lifetimeScope);
+                    await ExecuteEventHandlerAsync(@event, handler, lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
         }
@@ -112,19 +112,19 @@ namespace Dominion.Messages
             {
                 using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
                 {
-                    await CallEventHandlerAsync(@event, handlerType, childLifetimeScope);
+                    await CallEventHandlerAsync(@event, handlerType, childLifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
             {
-                await CallEventHandlerAsync(@event, handlerType, lifetimeScope);
+                await CallEventHandlerAsync(@event, handlerType, lifetimeScope).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
         private static async Task CallEventHandlerAsync(IDomainEvent @event, Type handlerType, ILifetimeScope lifetimeScope)
         {
             var handler = (dynamic)lifetimeScope.Resolve(handlerType);
-            await handler.HandleAsync((dynamic)@event);
+            await handler.HandleAsync((dynamic)@event).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private IEnumerable<Type> GetEventHandlers(Type eventType)
