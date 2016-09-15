@@ -1,12 +1,45 @@
-﻿namespace Dominion.Messages
+﻿using System;
+
+namespace Dominion.Messages
 {
-    public abstract class AggregateChangedEvent<TAggregate, TId> where TAggregate : IAggregate<TId>
+    public abstract class AggregateChangedEvent<TAggregate, TId> : IAggregateChangedEvent, IDomainEvent
+        where TAggregate : IAggregate<TId>
     {
-        protected AggregateChangedEvent(TAggregate aggregate)
-        {
-            Aggregate = aggregate;
+        protected AggregateChangedEvent()
+        {    
         }
 
-        public TAggregate Aggregate { get; private set; }
+        protected AggregateChangedEvent(TAggregate aggregate)
+        {
+            AggregateType = typeof(TAggregate);
+            AggregateId = aggregate.Id;
+        }
+
+        public Type AggregateType { get; set; }
+        public TId AggregateId { get; private set; }
+    }
+
+    public interface IAggregateChangedEvent
+    {
+    }
+
+    public interface IAggregateCreatedEvent
+    { }
+
+    public class AggregateCreatedEvent<TAggregate, TId> : IAggregateCreatedEvent, IDomainEvent
+        where TAggregate : IAggregate<TId>
+    {
+        protected AggregateCreatedEvent()
+        {
+        }
+
+        protected AggregateCreatedEvent(TAggregate aggregate)
+        {
+            AggregateType = typeof(TAggregate);
+            AggregateId = aggregate.Id;
+        }
+
+        public Type AggregateType { get; set; }
+        public TId AggregateId { get; private set; }
     }
 }

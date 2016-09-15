@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
+using Dominion.Repositories;
 
 namespace Dominion.Messages
 {
@@ -102,8 +104,28 @@ namespace Dominion.Messages
 
         private static void CallEventHandler(IDomainEvent @event, Type handlerType, ILifetimeScope lifetimeScope)
         {
-            var handler = (dynamic)lifetimeScope.Resolve(handlerType);
+            var handler = ResolveHandler(@event, handlerType, lifetimeScope);
             handler.Handle((dynamic)@event);
+        }
+
+        private static dynamic ResolveHandler(IDomainEvent @event, Type handlerType, ILifetimeScope lifetimeScope)
+        {
+            var isAggregateChangedEventType = @event is IAggregateChangedEvent;
+            if (isAggregateChangedEventType)
+            {
+                if (handlerType.IsAssignableTo<IAggregate>())
+                {
+                    var interfaceType = handlerType.GetTypeInfo().ImplementedInterfaces.First(i => i.IsAssignableTo<IAggregate>() && i != typeof(IAggregate));
+                    var idType = interfaceType.GenericTypeArguments[0];
+                    var repoType = typeof(IRepository<,>).MakeGenericType(handlerType, idType);
+                    var repository = (dynamic) lifetimeScope.Resolve(repoType);
+                    var aggregateChangedEvent = (dynamic) @event;
+
+                    return repository.Get(aggregateChangedEvent.AggregateId);
+                }
+            }
+
+            return (dynamic)lifetimeScope.Resolve(handlerType);
         }
 
         private async Task ExecuteEventHandlerAsync(IDomainEvent @event, Type handlerType, ILifetimeScope lifetimeScope)
