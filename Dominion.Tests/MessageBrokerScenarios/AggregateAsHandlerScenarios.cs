@@ -23,7 +23,6 @@ namespace Dominion.Tests.MessageBrokerScenarios
             builder.RegisterType<TestRepository>().AsImplementedInterfaces().AsSelf().InstancePerLifetimeScope();
 
             TestRepository.HandleGotCalled = false;
-            TestAggregate.HandleGotCalled = false;
 
             _container = builder.Build();
             _subject = new MessageBroker(_container, MessagePublishingChildScopeBehaviour.NoChildScopes);
@@ -38,7 +37,6 @@ namespace Dominion.Tests.MessageBrokerScenarios
             await _subject.PublishAsync(e);
 
             TestRepository.HandleGotCalled.ShouldBe(true);
-            TestAggregate.HandleGotCalled.ShouldBe(false);
         }
 
         [TestMethod]
@@ -52,7 +50,24 @@ namespace Dominion.Tests.MessageBrokerScenarios
             await _subject.PublishAsync(e);
 
             TestRepository.HandleGotCalled.ShouldBe(false);
-            TestAggregate.HandleGotCalled.ShouldBe(true);
+            testAggregate.HandleGotCalled.ShouldBe(true);
+        }
+
+        [TestMethod]
+        public async Task CorrectAggregateHasItsHandlerCalled()
+        {
+            var repo = _container.Resolve<IRepository<TestAggregate, Guid>>();
+            var testAggregate = new TestAggregate();
+            repo.Add(testAggregate);
+            var testAggregate2 = new TestAggregate();
+            repo.Add(testAggregate2);
+            
+            var e = new TestChangedEvent(testAggregate2);
+            await _subject.PublishAsync(e);
+
+            TestRepository.HandleGotCalled.ShouldBe(false);
+            testAggregate.HandleGotCalled.ShouldBe(false);
+            testAggregate2.HandleGotCalled.ShouldBe(true);
         }
 
         public class TestCreatedEvent : AggregateCreatedEvent<TestAggregate, Guid>
@@ -93,7 +108,7 @@ namespace Dominion.Tests.MessageBrokerScenarios
 
             public Guid Id { get; }
 
-            public static bool HandleGotCalled { get; set; }
+            public bool HandleGotCalled { get; set; }
 
             public void Handle(TestChangedEvent args)
             {
