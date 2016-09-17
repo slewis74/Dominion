@@ -39,6 +39,7 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NSubstitute, Version=1.9.1.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <HintPath>..\packages\NSubstitute.1.9.1.0\lib\net45\NSubstitute.dll</HintPath>
       <Private>True</Private>
@@ -62,6 +63,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EventSourcing\EventStoreScenarios\SampleDomain\SampleAggregate.cs" />
+    <Compile Include="EventSourcing\EventStoreScenarios\StoreScenarios.cs" />
     <Compile Include="MessageBrokerScenarios\AggregateAsHandlerScenarios.cs" />
     <Compile Include="MessageBrokerScenarios\MessageBrokerWithChildScopePerHandlerScenarios.cs" />
     <Compile Include="MessageBrokerScenarios\MessageBrokerWithChildScopePerPublishScenarios.cs" />
@@ -78,6 +81,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dominion.EventSourcing\Dominion.EventSourcing.csproj">
+      <Project>{b237428a-00ea-4c2c-8761-508d3e3263be}</Project>
+      <Name>Dominion.EventSourcing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dominion\Dominion.csproj">
       <Project>{a5458637-3a00-4a53-842b-19f867ea214f}</Project>
       <Name>Dominion</Name>
